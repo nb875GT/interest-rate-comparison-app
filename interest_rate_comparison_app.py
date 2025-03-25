@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas_datareader.data as web
 import pandas as pd
 import plotly.graph_objects as go
 from fredapi import Fred
