@@ -79,30 +79,28 @@ fig.update_layout(
         font=dict(size=20, color="white"),
         x=0.5
     ),
-    xaxis_title="Date",
-    yaxis_title="Yield (%)",
-    template="plotly_dark",
-    hovermode="x unified",
-    plot_bgcolor='black',
-    paper_bgcolor='black',
     xaxis=dict(
+        title=dict(text="Date", font=dict(size=14, color='white')),
         tickmode='array',
         tickvals=monthly_ticks,
         tickformat="%b\n%Y",
         tickangle=0,
-        tickfont=dict(size=12, color='white'),
-        titlefont=dict(size=14, color='white')
+        tickfont=dict(size=12, color='white')
     ),
     yaxis=dict(
-        tickfont=dict(size=12, color='white'),
-        titlefont=dict(size=14, color='white')
+        title=dict(text="Yield (%)", font=dict(size=14, color='white')),
+        tickfont=dict(size=12, color='white')
     ),
     legend=dict(
         title="Rate Type",
         font=dict(size=12, color="white"),
         bgcolor="black",
         bordercolor="gray"
-    )
+    ),
+    template="plotly_dark",
+    hovermode="x unified",
+    plot_bgcolor='black',
+    paper_bgcolor='black'
 )
 # Display chart
 st.plotly_chart(fig, use_container_width=True)
