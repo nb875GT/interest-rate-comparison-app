@@ -2,6 +2,7 @@ import streamlit as st
 import pandas_datareader.data as web
 import pandas as pd
 import plotly.graph_objects as go
+from fredapi import Fred
 from datetime import datetime
 
 # Streamlit page config
@@ -13,20 +14,22 @@ st.caption("Prime Rate, 30-Year Treasury, and Fed Funds Rate")
 start_date = "2024-01-01"
 end_date = "2025-03-21"
 
-# Define FRED tickers
+# Insert your FRED API key here (or use st.secrets)
+fred = Fred(api_key="1f7c12c2608de8d360efcc8c4e7febda")
+
+# Define series
 series = {
     "Prime Rate": "MPRIME",
     "30 Yr Treasury": "GS30",
     "Fed Funds Rate": "FEDFUNDS"
 }
-
-# Download data from FRED
+# Pull data
 data = {}
 for label, ticker in series.items():
-    df = web.DataReader(ticker, 'fred', start_date, end_date)
-    data[label] = df.rename(columns={ticker: label})
+    df = fred.get_series(ticker, start_date, end_date)
+    df = df.to_frame(name=label)
+    data[label] = df
 
-# Combine data into one DataFrame
 df_all = pd.concat(data.values(), axis=1)
 
 # Generate tick marks
