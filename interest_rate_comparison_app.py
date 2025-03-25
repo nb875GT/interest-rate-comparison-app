@@ -83,16 +83,14 @@ fig.update_layout(
     yaxis_title="Yield (%)",
     template="plotly_dark",
     hovermode="x unified",
-    legend_title="Rate Type",
     plot_bgcolor='black',
     paper_bgcolor='black',
-    font=dict(color="white"),  # Default font color for labels
     xaxis=dict(
         tickmode='array',
         tickvals=monthly_ticks,
         tickformat="%b\n%Y",
         tickangle=0,
-        tickfont=dict(size=12, color='white'),  # Increase size
+        tickfont=dict(size=12, color='white'),
         titlefont=dict(size=14, color='white')
     ),
     yaxis=dict(
@@ -100,11 +98,11 @@ fig.update_layout(
         titlefont=dict(size=14, color='white')
     ),
     legend=dict(
+        title="Rate Type",
         font=dict(size=12, color="white"),
         bgcolor="black",
         bordercolor="gray"
     )
 )
-
 # Display chart
 st.plotly_chart(fig, use_container_width=True)
