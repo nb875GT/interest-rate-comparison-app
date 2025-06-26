@@ -11,35 +11,37 @@ st.caption("Prime Rate, 30-Year Treasury, and Fed Funds Rate")
 
 # Define date range
 start_date = "2024-01-01"
-end_date = "2025-03-21"
+end_date = datetime.today().strftime('%Y-%m-%d')  # Automatically update to today
 
-# Insert your FRED API key here (or use st.secrets)
+# Load FRED API key
 fred = Fred(api_key=st.secrets["fred_api_key"])
 
-# Define series
+# Define FRED series
 series = {
     "Prime Rate": "MPRIME",
     "30 Yr Treasury": "GS30",
     "Fed Funds Rate": "FEDFUNDS"
 }
-# Pull data
+
+# Pull data for each series
 data = {}
 for label, ticker in series.items():
     df = fred.get_series(ticker, start_date, end_date)
     df = df.to_frame(name=label)
     data[label] = df
 
+# Combine into one DataFrame
 df_all = pd.concat(data.values(), axis=1)
 
-# Generate tick marks
+# Tick marks for annotations
 monthly_ticks = pd.date_range(start=start_date, end=end_date, freq='MS')
 quarterly_ticks = pd.date_range(start=start_date, end=end_date, freq='QS')
 yearly_ticks = pd.date_range(start=start_date, end=end_date, freq='AS')
 
-# Interactive Plotly chart
+# Create Plotly chart
 fig = go.Figure()
 
-# Add curves
+# Add each interest rate line
 for column in df_all.columns:
     fig.add_trace(go.Scatter(
         x=df_all.index,
@@ -48,7 +50,7 @@ for column in df_all.columns:
         name=column
     ))
 
-# Add quarter annotations
+# Quarter lines and annotations
 for date in quarterly_ticks:
     fig.add_vline(x=date, line_width=1, line_dash="dash", line_color="gray")
     fig.add_annotation(
@@ -57,10 +59,10 @@ for date in quarterly_ticks:
         text=f"Q{((date.month - 1) // 3) + 1}",
         showarrow=False,
         yshift=20,
-        font=dict(color="white", size=12)  # Updated: brighter and larger
+        font=dict(color="white", size=12)
     )
 
-# Add year annotations
+# Year lines and annotations
 for date in yearly_ticks:
     fig.add_vline(x=date, line_width=2, line_dash="dot", line_color="white")
     fig.add_annotation(
@@ -69,10 +71,10 @@ for date in yearly_ticks:
         text=str(date.year),
         showarrow=False,
         yshift=40,
-        font=dict(color="white", size=14)  # Updated
+        font=dict(color="white", size=14)
     )
 
-# Style chart with true black background
+# Final layout
 fig.update_layout(
     title=dict(
         text="US Interest Rates: Prime, Fed Funds, and 30-Year Treasury",
@@ -102,5 +104,6 @@ fig.update_layout(
     plot_bgcolor='black',
     paper_bgcolor='black'
 )
-# Display chart
+
+# Show chart
 st.plotly_chart(fig, use_container_width=True)
